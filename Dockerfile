@@ -1,35 +1,51 @@
 # Multi-stage Dockerfile for STARK application
 
-# Stage 1: Build client
+# Stage 1: Build shared package
+FROM node:20-alpine AS shared-builder
+WORKDIR /app
+COPY package*.json ./
+COPY shared/ ./shared/
+RUN npm install --legacy-peer-deps
+RUN npm run build --workspace=shared
+
+# Stage 2: Build client
 FROM node:20-alpine AS client-builder
-WORKDIR /app/client
-COPY client/package*.json ./
+WORKDIR /app
+COPY package*.json ./
+COPY shared/ ./shared/
+COPY client/package*.json ./client/
 RUN npm install --legacy-peer-deps
-COPY client/ ./
-RUN npm run build
+COPY client/ ./client/
+RUN npm run build --workspace=client
 
-# Stage 2: Build server
+# Stage 3: Build server
 FROM node:20-alpine AS server-builder
-WORKDIR /app/server
-COPY server/package*.json ./
+WORKDIR /app
+COPY package*.json ./
+COPY shared/ ./shared/
+COPY server/package*.json ./server/
 RUN npm install --legacy-peer-deps
-COPY server/ ./
-RUN npm run build
+COPY server/ ./server/
+RUN npm run build --workspace=server
 
-# Stage 3: Production server with client static files
+# Stage 4: Production server with client static files
 FROM node:20-alpine AS production
 WORKDIR /app
 
 # Install dumb-init for proper signal handling
 RUN apk add --no-cache dumb-init
 
-# Copy server dependencies and built files
-COPY server/package*.json ./
-RUN npm install --legacy-peer-deps --omit=dev
-COPY --from=server-builder /app/server/dist ./dist
-COPY --from=server-builder /app/server/node_modules ./node_modules
+# Copy package files and shared package
+COPY package*.json ./
+COPY shared/ ./shared/
+COPY server/package*.json ./server/
 
-# Copy client build to serve static files
+# Install dependencies
+RUN npm install --legacy-peer-deps --omit=dev
+
+# Copy built files
+COPY --from=shared-builder /app/shared/dist ./shared/dist
+COPY --from=server-builder /app/server/dist ./dist
 COPY --from=client-builder /app/client/dist ./public
 
 # Create logs directory
