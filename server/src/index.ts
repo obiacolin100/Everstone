@@ -53,7 +53,14 @@ export const io = process.env.NODE_ENV === 'test' ? null : initSocket(httpServer
 // Basic middleware
 app.use((req, res, next) => {
   const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
-  const allowedOrigins = Array.from(new Set([clientUrl, 'http://localhost:5173', 'http://localhost:4173', 'http://localhost:5174']));
+  const allowedOrigins = Array.from(new Set([
+    clientUrl,
+    'http://localhost:5173',
+    'http://localhost:4173',
+    'http://localhost:5174',
+    'https://stark-wheat.vercel.app',
+    'https://everstone.vercel.app'
+  ]));
   const origin = req.headers.origin;
 
   if (origin && allowedOrigins.includes(origin)) {
