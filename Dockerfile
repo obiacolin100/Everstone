@@ -4,7 +4,7 @@
 FROM node:20-alpine AS client-builder
 WORKDIR /app/client
 COPY client/package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY client/ ./
 RUN npm run build
 
@@ -12,7 +12,7 @@ RUN npm run build
 FROM node:20-alpine AS server-builder
 WORKDIR /app/server
 COPY server/package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY server/ ./
 RUN npm run build
 
@@ -25,7 +25,7 @@ RUN apk add --no-cache dumb-init
 
 # Copy server dependencies and built files
 COPY server/package*.json ./
-RUN npm install --production
+RUN npm install --legacy-peer-deps --omit=dev
 COPY --from=server-builder /app/server/dist ./dist
 COPY --from=server-builder /app/server/node_modules ./node_modules
 
