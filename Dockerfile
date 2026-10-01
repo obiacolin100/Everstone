@@ -4,6 +4,7 @@
 FROM node:20-alpine AS shared-builder
 WORKDIR /app
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/ ./shared/
 RUN npm install --legacy-peer-deps
 RUN npm run build --workspace=shared
@@ -12,6 +13,7 @@ RUN npm run build --workspace=shared
 FROM node:20-alpine AS client-builder
 WORKDIR /app
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/ ./shared/
 COPY client/package*.json ./client/
 RUN npm install --legacy-peer-deps
@@ -22,6 +24,7 @@ RUN npm run build --workspace=client
 FROM node:20-alpine AS server-builder
 WORKDIR /app
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/ ./shared/
 COPY server/package*.json ./server/
 RUN npm install --legacy-peer-deps
@@ -37,6 +40,7 @@ RUN apk add --no-cache dumb-init
 
 # Copy package files and shared package
 COPY package*.json ./
+COPY tsconfig.base.json ./
 COPY shared/ ./shared/
 COPY server/package*.json ./server/
 
