@@ -50,6 +50,7 @@ RUN npm install --legacy-peer-deps --omit=dev
 # Copy built files
 COPY --from=shared-builder /app/shared/dist ./shared/dist
 COPY --from=server-builder /app/server/dist/server/src ./dist
+COPY --from=server-builder /app/server/dist/shared ./shared/dist
 COPY --from=client-builder /app/client/dist ./public
 
 # Create logs directory
@@ -70,4 +71,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 ENTRYPOINT ["dumb-init", "--"]
 
 # Start server
-CMD ["node", "dist/src/index.js"]
+CMD ["node", "dist/index.js"]
