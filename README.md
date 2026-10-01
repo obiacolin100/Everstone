@@ -52,7 +52,8 @@ A modern, full-stack digital banking application built with React, TypeScript, N
 - **Rate Limiting** - API protection
 
 ### Infrastructure
-- **Render** - Cloud hosting platform
+- **Vercel** - Cloud hosting platform (frontend)
+- **Render** - Cloud hosting platform (backend API)
 - **MongoDB Atlas** - Cloud database
 - **GitHub** - Version control
 
@@ -67,8 +68,8 @@ A modern, full-stack digital banking application built with React, TypeScript, N
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/Dera309/STARK.git
-cd STARK
+git clone https://github.com/obiacolin100/Everstone.git
+cd Everstone
 ```
 
 2. **Install dependencies**
@@ -187,34 +188,42 @@ STARK/
 
 ## 🌐 Deployment
 
-### Render Deployment
+### Vercel Deployment (Frontend)
 
-The application is deployed on Render using the provided `render.yaml` configuration:
+The frontend can be deployed on Vercel for optimal performance:
 
-- **API Server**: `https://stark-api-04gm.onrender.com`
-- **Client**: `https://stark-h310.onrender.com`
+To deploy the client on Vercel:
 
-To deploy:
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Vercel will automatically detect the React app and build it
+4. Set environment variables in Vercel dashboard:
+   - `VITE_API_URL`: Your backend API URL (e.g., https://your-api.onrender.com/api/v1)
+   - `VITE_SOCKET_URL`: Your backend socket URL (e.g., https://your-api.onrender.com)
+
+### Render Deployment (Backend)
+
+The backend API is deployed on Render using the provided `render.yaml` configuration:
+
+To deploy the backend on Render:
 
 1. Push your code to GitHub
 2. Connect your repository to Render
 3. Render will automatically build and deploy using `render.yaml`
 
-### Environment Variables on Render
+### Environment Variables
 
-Set the following environment variables in your Render dashboard:
-
-**Server Service:**
+**Render (Backend API):**
 - `PORT`: 3003
 - `NODE_ENV`: production
 - `MONGODB_URI`: Your MongoDB Atlas connection string
 - `JWT_SECRET`: Your JWT secret key
 - `JWT_EXPIRES_IN`: 24h
-- `CLIENT_URL`: https://stark-h310.onrender.com
+- `CLIENT_URL`: Your Vercel frontend URL
 
-**Client Service:**
-- `VITE_API_URL`: https://stark-api-04gm.onrender.com/api/v1
-- `VITE_SOCKET_URL`: https://stark-api-04gm.onrender.com
+**Vercel (Frontend):**
+- `VITE_API_URL`: Your Render backend API URL
+- `VITE_SOCKET_URL`: Your Render backend socket URL
 
 ## 🧪 Testing
 
@@ -272,7 +281,7 @@ npm run build
 
 ## 🤝 Contributing
 
-1. Fork the repository
+1. Fork the repository from https://github.com/obiacolin100/Everstone
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
